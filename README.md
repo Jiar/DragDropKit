@@ -20,7 +20,7 @@
 $ gem install cocoapods
 ```
 
-> CocoaPods 1.1.0+ is required to build DragDropKit 0.1
+> CocoaPods 1.1.0+ is required to build DragDropKit 0.2
 
 To integrate DragDropKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
@@ -30,7 +30,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'DragDropKit', '~> 0.1'
+    pod 'DragDropKit', '~> 0.2'
 end
 ```
 
@@ -85,6 +85,14 @@ extension ViewController: UITableViewDataSource {
         return cell
     }
     
+    public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        let section = indexPath.section
+        if section == 0 {
+            return false
+        }
+        return true
+    }
+    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let sourceSection = sourceIndexPath.section
         let sourceRow = sourceIndexPath.row
@@ -104,7 +112,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
+        print("didSelectRowAt: section:\(indexPath.section) - row:\(indexPath.row)")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

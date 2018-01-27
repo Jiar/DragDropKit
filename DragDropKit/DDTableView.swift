@@ -119,6 +119,11 @@ public class DDTableView: UITableView {
             releaseValues()
             return
         }
+        if let canMoveRow = dataSource?.tableView?(self, canMoveRowAt: currentIndexPath) {
+            guard canMoveRow else {
+                return
+            }
+        }
         let point = gesture.location(in: cell)
         centerDistancePoint = CGPoint(x: point.x-cell.frame.width/2, y: point.y-cell.frame.height/2)
         ddDelegate?.tableView?(self, beginMoveRowAt: currentIndexPath)
@@ -171,6 +176,11 @@ public class DDTableView: UITableView {
         guard currentIndexPath != sourceIndexPath else {
             return
         }
+        if let canMoveRow = dataSource?.tableView?(self, canMoveRowAt: currentIndexPath) {
+            guard canMoveRow else {
+                return
+            }
+        }
         guard let _ = dataSource?.tableView?(self, moveRowAt: sourceIndexPath, to: currentIndexPath) else {
             print("must implementation the function: \"tableView(_:moveRowAt:to:)\" in UITableViewDataSource")
             return
@@ -217,16 +227,14 @@ public class DDTableView: UITableView {
             cell.alpha = 1
         }, completion: { finished in
             cell.isHidden = false
-            self.releaseValues(false)
+            self.releaseValues()
         })
     }
     
-    private func releaseValues(_ needRemove: Bool = true) {
+    private func releaseValues() {
         centerDistancePoint = nil
         sourceIndexPath = nil
-        if needRemove {
-            snapShotView?.removeFromSuperview()
-        }
+        snapShotView?.removeFromSuperview()
         snapShotView = nil
     }
     
